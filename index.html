@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asadero y Broaster · Menú Interactivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #16110d;
+    --bg-panel: #1e1712;
+    --bg-card: #241b15;
+    --ember: #e2711d;
+    --ember-bright: #ff9d42;
+    --gold: #c99a4a;
+    --cream: #f4ead9;
+    --cream-dim: #cbbfae;
+    --charcoal-line: #3a2c1f;
+    --shadow: rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at top, #241a12 0%, var(--bg) 55%),
+      var(--bg);
+    color:var(--cream);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .display{font-family:'Anton', sans-serif; letter-spacing:0.5px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:38px 20px 30px;
+    text-align:center;
+    border-bottom:1px solid var(--charcoal-line);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(115deg, rgba(226,113,29,0.05) 0px, rgba(226,113,29,0.05) 2px, transparent 2px, transparent 60px);
+    pointer-events:none;
+  }
+  .hero-logo{
+    width:112px; height:112px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid var(--gold);
+    box-shadow:0 0 0 6px rgba(201,154,74,0.12), 0 10px 30px var(--shadow);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:clamp(28px, 6vw, 46px);
+    margin:0 0 4px;
+    color:var(--cream);
+    text-shadow:0 2px 12px rgba(226,113,29,0.25);
+  }
+  .hero h1 span{color:var(--ember-bright);}
+  .hero p.tagline{
+    margin:0;
+    color:var(--gold);
+    font-size:14px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+  }
+  .hero-meta{
+    display:flex; flex-wrap:wrap; gap:18px;
+    justify-content:center;
+    margin-top:18px;
+    font-size:13.5px;
+    color:var(--cream-dim);
+  }
+  .hero-meta div{display:flex; align-items:center; gap:6px;}
+  .hero-meta a{color:var(--cream-dim); text-decoration:none;}
+  .hero-meta strong{color:var(--ember-bright); font-weight:600;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(20,15,11,0.94);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--charcoal-line);
+  }
+  .nav-inner{
+    max-width:1100px; margin:0 auto;
+    display:flex; gap:4px;
+    overflow-x:auto;
+    padding:10px 14px;
+    scrollbar-width:none;
+  }
+  .nav-inner::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    flex:0 0 auto;
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--cream-dim);
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    letter-spacing:0.3px;
+    padding:9px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .2s ease;
+  }
+  .tab-btn:hover{color:var(--cream); border-color:var(--charcoal-line);}
+  .tab-btn.active{
+    background:linear-gradient(135deg, var(--ember) 0%, #b5510f 100%);
+    color:#fff8f0;
+    box-shadow:0 4px 14px rgba(226,113,29,0.35);
+  }
+
+  /* ---------- MAIN ---------- */
+  main{max-width:1100px; margin:0 auto; padding:30px 18px 60px;}
+  .section{display:none; animation:fadeIn .35s ease;}
+  .section.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .section-head{
+    display:flex; align-items:baseline; gap:14px;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--charcoal-line);
+    padding-bottom:12px;
+  }
+  .section-head h2{
+    font-size:clamp(22px,4vw,30px);
+    margin:0; color:var(--ember-bright);
+  }
+  .section-head p{margin:0; color:var(--cream-dim); font-size:13px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px,1fr));
+    gap:18px;
+  }
+
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--charcoal-line);
+    border-radius:14px;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 30px var(--shadow);
+    border-color:var(--ember);
+  }
+  .card img{
+    width:100%; height:150px; object-fit:cover;
+    display:block;
+    filter:saturate(1.05);
+    border-bottom:1px solid var(--charcoal-line);
+  }
+  .card-body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:6px; flex:1;}
+  .card-body h3{
+    margin:0; font-size:16px; color:var(--cream);
+    font-weight:700; letter-spacing:0.2px;
+  }
+  .card-body .desc{font-size:12.5px; color:var(--cream-dim); line-height:1.45; flex:1;}
+  .card-body .tag{
+    display:inline-block; font-size:11px; color:var(--gold);
+    text-transform:uppercase; letter-spacing:1px; font-weight:600;
+  }
+  .price{
+    margin-top:6px;
+    font-family:'Anton', sans-serif;
+    font-size:20px;
+    color:var(--ember-bright);
+  }
+  .price::before{content:"$ ";}
+
+  /* list-style rows for entradas/bebidas */
+  .rows{
+    background:var(--bg-card);
+    border:1px solid var(--charcoal-line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .row-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:13px 18px;
+    border-bottom:1px solid var(--charcoal-line);
+    font-size:14.5px;
+  }
+  .row-item:last-child{border-bottom:none;}
+  .row-item .name{color:var(--cream);}
+  .row-item .amount{
+    font-family:'Anton', sans-serif;
+    color:var(--ember-bright); font-size:16px;
+  }
+  .row-item .amount::before{content:"$ ";}
+
+  .split{display:grid; grid-template-columns:1fr; gap:18px;}
+  @media(min-width:720px){ .split{grid-template-columns:1fr 1fr;} }
+  .split-photos{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;}
+  .split-photos img{width:100%; height:130px; object-fit:cover; border-radius:12px; border:1px solid var(--charcoal-line);}
+
+  .note-box{
+    margin-top:20px; padding:14px 18px;
+    border-left:3px solid var(--ember);
+    background:rgba(226,113,29,0.06);
+    border-radius:0 10px 10px 0;
+    font-size:13px; color:var(--cream-dim);
+  }
+
+  /* combo card with icon + featured price ribbon */
+  .combo-card{position:relative;}
+  .combo-card .ribbon{
+    position:absolute; top:10px; right:-6px;
+    background:var(--gold); color:#241b15;
+    font-family:'Anton',sans-serif;
+    font-size:11px; letter-spacing:1px;
+    padding:3px 10px 3px 12px;
+    border-radius:4px 0 0 4px;
+  }
+
+  footer{
+    text-align:center; padding:26px 18px 40px;
+    color:var(--cream-dim); font-size:12.5px;
+    border-top:1px solid var(--charcoal-line);
+  }
+  footer .fire{color:var(--ember-bright);}
+
+  @media(max-width:480px){
+    .hero-meta{flex-direction:column; gap:8px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <img class="hero-logo" src="assets/hero_chicken.png" alt="Asadero y Broaster a Fuego Lento">
+  <h1>ASADERO <span>&amp;</span> BROASTER</h1>
+  <p class="tagline">A fuego lento</p>
+  <div class="hero-meta">
+    <div>🍗 Platos a la carta</div>
+    <div>🛵 Domicilios</div>
+    <div>📞 <strong>3209501906</strong> · <strong>3236567113</strong> · <strong>3013959227</strong></div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner" id="navInner"></div>
+</nav>
+
+<main id="main"></main>
+
+<footer>
+  Asadero y Broaster <span class="fire">a Fuego Lento</span> — Menú interactivo. Precios en pesos colombianos (COP).
+</footer>
+
+<script>
+/* ============ DATA — transcrito exactamente del menú ============ */
+const MENU = {
+  combos: {
+    label: "Combos",
+    title: "Combos",
+    subtitle: "Ideales para compartir en familia",
+    type: "combos",
+    items: [
+      { name:"Combo 1", price:"52.000", tag:"1 Pollo Asado", desc:"Papa Salada, Plátano con queso y bocadillo, Arepa y Gaseosa 1.5lts", img:"assets/icon_combo1.png"},
+      { name:"Combo 2", price:"71.000", tag:"1 1/2 Pollo Asado", desc:"Papa Salada, Plátano con queso y bocadillo, Arepa y Gaseosa 1.5lts", img:"assets/icon_combo2.png"},
+      { name:"Combo 3", price:"53.000", tag:"1 Pollo Broaster", desc:"Papa Francesa, Patacón, Yuca, Arepa y Gaseosa 1.5lts", img:"assets/icon_combo3.png"},
+      { name:"Combo 4", price:"72.000", tag:"1 1/2 Pollo Broaster", desc:"Papa Francesa, Patacón, Yuca, Arepa y Gaseosa 1.5lts", img:"assets/icon_combo4.png"},
+      { name:"Combo 5", price:"20.000", tag:"1 Hamburguesa", desc:"Carne o Pollo, Papa Francesa, Gaseosa Personal", img:"assets/icon_combo5.png"},
+      { name:"Combo Mixto", price:"53.000", tag:"1/2 Pollo Asado + 1/2 Pollo Broaster", desc:"Papa Francesa, Papa Salada, Patacones, Yuca, Arepa y Gaseosa 1.5lts", img:"assets/icon_combomixto.png"},
+    ]
+  },
+  broaster: {
+    label:"Pollo Broaster",
+    title:"🔥 Pollo Broaster",
+    subtitle:"Pollo asado y pollo broaster por porciones, más hamburguesas",
+    type:"rows-plus",
+    rows:[
+      {name:"1 Pollo Asado", side:"Papa Salada - Arepa", price:"42.000"},
+      {name:"1/2 Pollo Asado", side:"Papa Salada - Arepa", price:"22.000"},
+      {name:"1/4 Pollo Asado", side:"Papa Salada - Arepa", price:"13.000"},
+      {name:"1 Pollo Broaster", side:"Arepa y Yuca", price:"43.000"},
+      {name:"1/4 Pollo Broaster", side:"Arepa y Yuca", price:"23.000"},
+      {name:"1/4 Pollo Broaster", side:"Arepa y Yuca", price:"13.500"},
+    ],
+    featured:{ name:"Hamburguesa Sencilla", desc:"Carne o Pollo", price:"14.000", img:"assets/icon_hamburguesa.png" }
+  },
+  carta: {
+    label:"Platos a la Carta",
+    title:"Platos a la Carta",
+    subtitle:"Todos incluyen Arroz, Patacón, Papa Francesa y Ensalada — $25.000",
+    type:"cards",
+    items:[
+      { name:"Pechuga a la Plancha", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_pechuga_plancha.png"},
+      { name:"Carne a la Plancha", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_carne_plancha.png"},
+      { name:"Chuleta Valluna", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_chuleta_valluna.png"},
+      { name:"Tabla Mixta", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_tabla_mixta.png"},
+      { name:"Pechuga Gratinada", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_pechuga_gratinada.png"},
+      { name:"Lomo de Cerdo", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_lomo_cerdo.png"},
+    ]
+  },
+  parrilla: {
+    label:"Parrilla y Carta Corriente",
+    title:"A la Parrilla / Carta Corriente",
+    subtitle:"Arroz, Patacón, Papa Francesa y Ensalada salvo donde se indique",
+    type:"cards",
+    items:[
+      { name:"Sobrebarriga en Salsa o a la Parrilla", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_sobrebarriga.png"},
+      { name:"Churrasco", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_churrasco.png"},
+      { name:"Mojarra", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_mojarra.png"},
+      { name:"Arroz con Pollo", price:"22.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_arroz_con_pollo.png"},
+      { name:"Bandeja con Pollo Asado", price:"21.500", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_bandeja_pollo_asado.png"},
+      { name:"Costillitas BBQ", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_costillitas_bbq.png"},
+      { name:"Bagre en Salsa o a la Parrilla", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_bagre_salsa.png"},
+      { name:"Trucha", price:"25.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_trucha.png"},
+      { name:"Alitas BBQ", price:"22.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_alitas_bbq.png"},
+      { name:"Bandeja con Pollo Broaster", price:"22.000", desc:"Arroz, Patacón, Papa Francesa y Ensalada", img:"assets/photo_bandeja_pollo_broaster.png"},
+    ]
+  },
+  entradas: {
+    label:"Entradas y Sopa",
+    title:"Entradas & Sopa del Día",
+    subtitle:"Para acompañar o abrir el apetito",
+    type:"entradas",
+    entradas:[
+    {name:"Francesa", price:"7.000"},
+    {name:"Croquetas de Yuca", price:"6.000"},
+    {name:"Papa Salada", price:"5.000"},
+    {name:"Patacón", price:"6.000"},
+    {name:"Plátano Maduro", price:"7.000"},
+    {name:"Arroz", price:"3.500"},
+    {name:"Ensalada", price:"3.500"},
+    {name:"Arepa", price:"3.000"},
+  ],
+    sopa:{ name:"Sopa del Día", desc:"Con coroz", price:"10.000", img:"assets/sopa_bowl.png" }
+  },
+  bebidas: {
+    label:"Bebidas",
+    title:"Bebidas",
+    subtitle:"Naturales y gaseosas",
+    type:"bebidas",
+    items:[
+    {name:"Limonada Natural (Personal)", price:"5.000"},
+    {name:"Jugo Natural en Agua (Personal)", price:"6.000"},
+    {name:"Jugo Natural en Leche (Personal)", price:"7.000"},
+    {name:"Cerveza en Botella", price:"4.000"},
+    {name:"Gaseosa 350ml", price:"3.500"},
+    {name:"Gaseosa 20oz", price:"4.000"},
+    {name:"Gaseosa 1.5lts", price:"8.000"},
+  ]
+  }
+};
+
+/* ============ RENDER ============ */
+const navInner = document.getElementById('navInner');
+const main = document.getElementById('main');
+
+function cardHTML(item, comboStyle){
+  return `
+    <div class="card ${comboStyle?'combo-card':''}">
+      <img src="${item.img}" alt="${item.name}" loading="lazy">
+      <div class="card-body">
+        <h3>${item.name}</h3>
+        ${item.tag?`<span class="tag">${item.tag}</span>`:''}
+        <p class="desc">${item.desc}</p>
+        <div class="price">${item.price}</div>
+      </div>
+    </div>`;
+}
+
+function renderSection(key){
+  const s = MENU[key];
+  let html = `<div class="section-head"><h2>${s.title}</h2><p>${s.subtitle}</p></div>`;
+
+  if(s.type === 'combos' || s.type === 'cards'){
+    html += `<div class="grid">${s.items.map(i=>cardHTML(i, s.type==='combos')).join('')}</div>`;
+  }
+
+  if(s.type === 'rows-plus'){
+    html += `<div class="split">
+      <div class="rows">
+        ${s.rows.map(r=>`
+          <div class="row-item">
+            <div>
+              <div class="name">${r.name}</div>
+              <div class="desc" style="color:var(--cream-dim); font-size:12px; margin-top:2px;">${r.side}</div>
+            </div>
+            <div class="amount">${r.price}</div>
+          </div>`).join('')}
+      </div>
+      <div class="grid" style="grid-template-columns:1fr;">
+        <div class="card">
+          <img src="${s.featured.img}" alt="${s.featured.name}">
+          <div class="card-body">
+            <h3>${s.featured.name}</h3>
+            <p class="desc">${s.featured.desc}</p>
+            <div class="price">${s.featured.price}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if(s.type === 'entradas'){
+    html += `<div class="split">
+      <div class="rows">
+        ${s.entradas.map(e=>`
+          <div class="row-item">
+            <div class="name">${e.name}</div>
+            <div class="amount">${e.price}</div>
+          </div>`).join('')}
+      </div>
+      <div class="card" style="align-self:start;">
+        <img src="${s.sopa.img}" alt="${s.sopa.name}">
+        <div class="card-body">
+          <h3>${s.sopa.name}</h3>
+          <p class="desc">${s.sopa.desc}</p>
+          <div class="price">${s.sopa.price}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if(s.type === 'bebidas'){
+    html += `<div class="split">
+      <div class="rows">
+        ${s.items.map(i=>`
+          <div class="row-item">
+            <div class="name">${i.name}</div>
+            <div class="amount">${i.price}</div>
+          </div>`).join('')}
+      </div>
+      <div class="split-photos" style="align-content:start;">
+        <img src="assets/bebidas_lemon.png" alt="Limonada natural">
+        <img src="assets/bebidas_smoothie.png" alt="Jugo natural">
+      </div>
+    </div>`;
+  }
+
+  return html;
+}
+
+function buildNav(){
+  Object.keys(MENU).forEach((key, idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (idx===0 ? ' active':'');
+    btn.textContent = MENU[key].label;
+    btn.dataset.key = key;
+    btn.addEventListener('click', ()=> showSection(key));
+    navInner.appendChild(btn);
+  });
+}
+
+function buildSections(){
+  Object.keys(MENU).forEach((key, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'section' + (idx===0 ? ' active':'');
+    div.id = 'sec-'+key;
+    div.innerHTML = renderSection(key);
+    main.appendChild(div);
+  });
+}
+
+function showSection(key){
+  document.querySelectorAll('.section').forEach(sec=>{
+    sec.classList.toggle('active', sec.id === 'sec-'+key);
+  });
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.key === key);
+  });
+  window.location.hash = key;
+  window.scrollTo({top: document.querySelector('nav').offsetTop, behavior:'smooth'});
+}
+
+buildNav();
+buildSections();
+
+/* deep-link support */
+const initialKey = window.location.hash.replace('#','');
+if(initialKey && MENU[initialKey]) showSection(initialKey);
+</script>
+</body>
+</html>
