@@ -460,7 +460,7 @@ function renderSection(key){
   if(s.type === 'comida-rapida'){
     html += `<h3 class="subsection-head" style="margin-top:0;">🍔 Hamburguesas</h3>`;
     html += `<div class="grid">${s.hamburguesas.map(h=>burgerCardHTML(h)).join('')}</div>`;
-    html += `<h3 class="subsection-head">🌭 Salchipapas</h3>`;
+    html += `<h3 class="subsection-head">🍟 Salchipapas</h3>`;
     html += `<div class="grid">${s.salchipapas.map(p=>cardHTML(p)).join('')}</div>`;
   }
 
