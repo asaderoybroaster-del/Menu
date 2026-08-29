@@ -137,6 +137,18 @@
   }
   .section-head p{margin:0; color:var(--cream-dim); font-size:13px;}
 
+  .subsection-head{
+    margin:28px 0 14px;
+    font-size:18px;
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    border-bottom:1px solid var(--charcoal-line);
+    padding-bottom:8px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+  }
+
   .grid{
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(230px,1fr));
@@ -179,6 +191,33 @@
     color:var(--ember-bright);
   }
   .price::before{content:"$ ";}
+
+  /* dual price (Sencilla / Combo) — hamburguesas */
+  .dual-price{
+    display:flex; gap:10px; margin-top:8px;
+  }
+  .price-box{
+    flex:1;
+    background:rgba(226,113,29,0.08);
+    border:1px solid var(--charcoal-line);
+    border-radius:8px;
+    padding:8px 10px;
+    text-align:center;
+  }
+  .price-label{
+    display:block;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--gold);
+    margin-bottom:2px;
+  }
+  .price-amount{
+    font-family:'Anton', sans-serif;
+    font-size:17px;
+    color:var(--ember-bright);
+  }
+  .price-amount::before{content:"$ ";}
 
   /* list-style rows for entradas/bebidas */
   .rows{
@@ -273,8 +312,23 @@ const MENU = {
       { name:"Combo 2", price:"71.000", tag:"1 1/2 Pollo Asado", desc:"Papa Salada, Plátano con queso y bocadillo, Arepa y Gaseosa 1.5lts", img:"assets/icon_combo2.png"},
       { name:"Combo 3", price:"53.000", tag:"1 Pollo Broaster", desc:"Papa Francesa, Patacón, Yuca, Arepa y Gaseosa 1.5lts", img:"assets/icon_combo3.png"},
       { name:"Combo 4", price:"72.000", tag:"1 1/2 Pollo Broaster", desc:"Papa Francesa, Patacón, Yuca, Arepa y Gaseosa 1.5lts", img:"assets/icon_combo4.png"},
-      { name:"Combo 5", price:"20.000", tag:"1 Hamburguesa", desc:"Carne o Pollo, Papa Francesa, Gaseosa Personal", img:"assets/icon_combo5.png"},
       { name:"Combo Mixto", price:"53.000", tag:"1/2 Pollo Asado + 1/2 Pollo Broaster", desc:"Papa Francesa, Papa Salada, Patacones, Yuca, Arepa y Gaseosa 1.5lts", img:"assets/icon_combomixto.png"},
+    ]
+  },
+  comida_rapida: {
+    label: "Comida Rápida",
+    title: "Comida Rápida",
+    subtitle: "Hamburguesas y Salchipapas",
+    type: "comida-rapida",
+    hamburguesas: [
+      { name:"Clásica", desc:"Carne o Pollo + Lechuga + Tomate + Cebolla + Tocineta + Queso cheddar + Papa chip", sencilla:"15.000", combo:"22.000", img:"assets/burger_clasica.png"},
+      { name:"Criolla", desc:"Carne + Lechuga + Tomate + Cebolla + Tocineta + Huevo + Queso cheddar", sencilla:"16.000", combo:"23.000", img:"assets/burger_criolla.png"},
+      { name:"Ranchera", desc:"Carne + Lechuga + Tomate + Cebolla + Madurito + Queso cheddar", sencilla:"16.000", combo:"23.000", img:"assets/burger_ranchera.png"},
+    ],
+    salchipapas: [
+      { name:"Maradona", price:"20.000", desc:"Francesa + Salchicha + Tocineta + Maíz Tierno + Queso + Madurito + Huevo de Codorniz + Papa Chip", img:"assets/salchipapa_maradona.png"},
+      { name:"Ranchera", price:"22.000", desc:"Francesa + Salchicha + Tocineta + Pollo Desmechado + Queso + Madurito + Huevo de Codorniz + Papa Chip", img:"assets/salchipapa_ranchera.png"},
+      { name:"Salchi Tender", price:"25.000", desc:"Francesa + Salchicha + Tocineta + Pollo Desmechado + Carne Desmechada + Queso + Madurito + Huevo de Codorniz + Papa Chip", img:"assets/salchipapa_salchitender.png"},
     ]
   },
   broaster: {
@@ -375,12 +429,40 @@ function cardHTML(item, comboStyle){
     </div>`;
 }
 
+function burgerCardHTML(item){
+  return `
+    <div class="card">
+      <img src="${item.img}" alt="${item.name}" loading="lazy">
+      <div class="card-body">
+        <h3>${item.name}</h3>
+        <p class="desc">${item.desc}</p>
+        <div class="dual-price">
+          <div class="price-box">
+            <span class="price-label">Sencilla</span>
+            <span class="price-amount">${item.sencilla}</span>
+          </div>
+          <div class="price-box">
+            <span class="price-label">Combo</span>
+            <span class="price-amount">${item.combo}</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
 function renderSection(key){
   const s = MENU[key];
   let html = `<div class="section-head"><h2>${s.title}</h2><p>${s.subtitle}</p></div>`;
 
   if(s.type === 'combos' || s.type === 'cards'){
     html += `<div class="grid">${s.items.map(i=>cardHTML(i, s.type==='combos')).join('')}</div>`;
+  }
+
+  if(s.type === 'comida-rapida'){
+    html += `<h3 class="subsection-head" style="margin-top:0;">🍔 Hamburguesas</h3>`;
+    html += `<div class="grid">${s.hamburguesas.map(h=>burgerCardHTML(h)).join('')}</div>`;
+    html += `<h3 class="subsection-head">🌭 Salchipapas</h3>`;
+    html += `<div class="grid">${s.salchipapas.map(p=>cardHTML(p)).join('')}</div>`;
   }
 
   if(s.type === 'rows-plus'){
