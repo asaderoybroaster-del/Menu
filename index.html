@@ -343,8 +343,7 @@ const MENU = {
       {name:"1 Pollo Broaster", side:"Arepa y Yuca", price:"43.000"},
       {name:"1/4 Pollo Broaster", side:"Arepa y Yuca", price:"23.000"},
       {name:"1/4 Pollo Broaster", side:"Arepa y Yuca", price:"13.500"},
-    ],
-    featured:{ name:"Hamburguesa Sencilla", desc:"Carne o Pollo", price:"14.000", img:"assets/icon_hamburguesa.png" }
+    ]
   },
   carta: {
     label:"Platos a la Carta",
@@ -466,27 +465,15 @@ function renderSection(key){
   }
 
   if(s.type === 'rows-plus'){
-    html += `<div class="split">
-      <div class="rows">
-        ${s.rows.map(r=>`
-          <div class="row-item">
-            <div>
-              <div class="name">${r.name}</div>
-              <div class="desc" style="color:var(--cream-dim); font-size:12px; margin-top:2px;">${r.side}</div>
-            </div>
-            <div class="amount">${r.price}</div>
-          </div>`).join('')}
-      </div>
-      <div class="grid" style="grid-template-columns:1fr;">
-        <div class="card">
-          <img src="${s.featured.img}" alt="${s.featured.name}">
-          <div class="card-body">
-            <h3>${s.featured.name}</h3>
-            <p class="desc">${s.featured.desc}</p>
-            <div class="price">${s.featured.price}</div>
+    html += `<div class="rows">
+      ${s.rows.map(r=>`
+        <div class="row-item">
+          <div>
+            <div class="name">${r.name}</div>
+            <div class="desc" style="color:var(--cream-dim); font-size:12px; margin-top:2px;">${r.side}</div>
           </div>
-        </div>
-      </div>
+          <div class="amount">${r.price}</div>
+        </div>`).join('')}
     </div>`;
   }
 
